@@ -1,5 +1,6 @@
 import React, { useState, useEffect, FunctionComponent } from "react";
 import axios, { AxiosResponse } from "axios"
+import { useForm } from "react-hook-form" 
 
 interface movieAPI {
     title: string,
@@ -8,11 +9,7 @@ interface movieAPI {
 }
 
 const Create = () => {
-    
-    //let search = window.location.search;
-    //let params = new URLSearchParams(search);
-
-    
+    const { register, handleSubmit, errors } = useForm<movieAPI>();
 
     const [title, setTitle]: [string, (title: string) => void] = useState("");
     const [review, setReview]: [string, (review: string) => void] = useState("");
@@ -33,7 +30,7 @@ const Create = () => {
         setGenre(genre);
     }
 
-    const onAddMovie = () => {
+    const onAddMovie = (data: movieAPI) => {
         let url = "";
         if (review !== "") {
             url = "/api/v1/Movies?title=" + title + "&review=" + review + "&genre=" + genre;
@@ -49,7 +46,7 @@ const Create = () => {
             },
         })
         .then(response => {
-            window.location.href = "/home";
+            window.location.href = "/";
         })
         .catch(ex => {
             const error =
@@ -62,27 +59,36 @@ const Create = () => {
     
     return (
         <div className="container">
-            <form onSubmit={onAddMovie} method="post">
+            <form onSubmit={handleSubmit(onAddMovie)} method="post">
                 <div className="row">
                     <div className="col-xs-12 col-sm-12 col-md-12">
                         <div className="form-group">
                             <strong>Title:</strong>
                             <input type="text" name="title" className="form-control" placeholder="Title"
-                            onChange={getTitle} value={title} />
+                            onChange={getTitle} value={title}  ref={register({required: true})}/>
+                            {errors.title && errors.title.type === "required" && (
+                                <div className="alert alert-warning">Your must enter your title.</div>
+                            )}
                         </div>
                     </div>
                     <div className="col-xs-12 col-sm-12 col-md-12">
                         <div className="form-group">
                             <strong>Review:</strong>
                             <input type="text" name="review" className="form-control" placeholder="Review"
-                            onChange={getReview} value={review}/>
+                            onChange={getReview} value={review} ref={register({required: true})} />
+                            {errors.review && errors.review.type === "required" && (
+                                <div className="alert alert-warning">Your must enter your review.</div>
+                            )}
                         </div>
                     </div>
                     <div className="col-xs-12 col-sm-12 col-md-12">
                         <div className="form-group">
                             <strong>Genre:</strong>
                             <input type="text" name="genre" className="form-control" placeholder="Genre"
-                            onChange={getGenre} value={genre} />
+                            onChange={getGenre} value={genre} ref={register({required: true})}/>
+                            {errors.genre && errors.genre.type === "required" && (
+                                <div className="alert alert-warning">Your must enter your genre.</div>
+                            )}
                         </div>
                     </div>
                     <div className="col-xs-12 col-sm-12 col-md-12 text-center">

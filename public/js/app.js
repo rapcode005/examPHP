@@ -52370,35 +52370,39 @@ module.exports = function(module) {
 var map = {
 	"./Create": [
 		"./resources/js/Pages/Create.tsx",
-		1
+		0,
+		5
 	],
 	"./Create.tsx": [
 		"./resources/js/Pages/Create.tsx",
-		1
+		0,
+		5
 	],
 	"./Edit": [
 		"./resources/js/Pages/Edit.tsx",
-		2
+		0,
+		3
 	],
 	"./Edit.tsx": [
 		"./resources/js/Pages/Edit.tsx",
-		2
+		0,
+		3
 	],
 	"./Home": [
 		"./resources/js/Pages/Home.tsx",
-		0
+		1
 	],
 	"./Home.tsx": [
 		"./resources/js/Pages/Home.tsx",
-		0
+		1
 	],
 	"./Pagination": [
 		"./resources/js/Pages/Pagination.tsx",
-		3
+		4
 	],
 	"./Pagination.tsx": [
 		"./resources/js/Pages/Pagination.tsx",
-		3
+		4
 	]
 };
 function webpackAsyncContext(req) {
@@ -52411,7 +52415,7 @@ function webpackAsyncContext(req) {
 	}
 
 	var ids = map[req], id = ids[0];
-	return __webpack_require__.e(ids[1]).then(function() {
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
 		return __webpack_require__.t(id, 7);
 	});
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Movie;
+use Illuminate\Support\Facades\DB;
 
 class MovieController extends Controller
 {
@@ -14,8 +15,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        //
-        return Movie::all();
+        return Movie::paginate(15);
     }
 
     /**
@@ -29,6 +29,7 @@ class MovieController extends Controller
         //
         $request->validate([
             'title' => 'required',
+            'review' => 'required',
             'genre' => 'required'
 
         ]);
@@ -71,7 +72,38 @@ class MovieController extends Controller
      */
     public function destroy($id)
     {
-        //
         return Movie::destroy($id);
     }
+
+    public function search(Request $request)
+    {
+        $result = Movie::where('title', 'LIKE', "%{$request->w}%")
+                ->orWhere('review', 'LIKE', "%{$request->w}%")
+                ->orWhere('genre', 'LIKE', "%{$request->w}%")
+                ->paginate(15);
+        return $result;
+    }
+
+    public function sort(Request $request) 
+    {
+        $data = array("title", "genre", "review");
+        $type = array("asc", "desc");
+
+        $s = array_values($data)[(int)$request->s];
+        $g = array_values($type)[(int)$request->g];
+
+        if (!isset($_GET['w'])) {
+            $result = Movie::orderByRaw('upper('.$s.') '.$g)->paginate(15);
+        }
+        else {
+            $result = Movie::where('title', 'LIKE', "%{$request->w}%")
+                ->orWhere('review', 'LIKE', "%{$request->w}%")
+                ->orWhere('genre', 'LIKE', "%{$request->w}%")
+                ->orderByRaw('upper('.$s.') '.$g)
+                ->paginate(15);
+        }
+        
+        return $result;
+    }
+
 }

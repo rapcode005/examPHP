@@ -23,6 +23,7 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('Movies', App\Http\Controllers\MovieController::class);
     Route::get('/movies/search', App\Http\Controllers\MovieController::class.'@search');
     Route::get('/movies/sort', App\Http\Controllers\MovieController::class.'@sort');
+    Route::get('/movies/wiki', App\Http\Controllers\MovieController::class.'@showwiki');
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Movie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class MovieController extends Controller
 {
@@ -15,7 +16,25 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return Movie::paginate(15);
+        $result = Movie::paginate(10); 
+        foreach ($result as $p) {
+            $url = "https://en.wikipedia.org/w/api.php";
+            $response = Http::get($url, ["action" => "query", 
+                                                    "list" => "search",
+                                                    "srsearch" => $p->title, 
+                                                    "format" => "json"]);
+            $x = $response["query"];
+            $t = $x["search"];
+            if(!empty($t)) {
+                $u = $t[0];
+                $title = $u["title"];
+            }
+            else {
+                $title = "";
+            }
+            $p["wiki"] = $title;
+        }
+        return $result;
     }
 
     /**
@@ -80,7 +99,24 @@ class MovieController extends Controller
         $result = Movie::where('title', 'LIKE', "%{$request->w}%")
                 ->orWhere('review', 'LIKE', "%{$request->w}%")
                 ->orWhere('genre', 'LIKE', "%{$request->w}%")
-                ->paginate(15);
+                ->paginate(10);
+        foreach ($result as $p) {
+            $url = "https://en.wikipedia.org/w/api.php";
+            $response = Http::get($url, ["action" => "query", 
+                                                    "list" => "search",
+                                                    "srsearch" => $p->title, 
+                                                    "format" => "json"]);
+            $x = $response["query"];
+            $t = $x["search"];
+            if(!empty($t)) {
+                $u = $t[0];
+                $title = $u["title"];
+            }
+            else {
+                $title = "";
+            }
+            $p["wiki"] = $title;
+        }
         return $result;
     }
 
@@ -93,17 +129,34 @@ class MovieController extends Controller
         $g = array_values($type)[(int)$request->g];
 
         if (!isset($_GET['w'])) {
-            $result = Movie::orderByRaw('upper('.$s.') '.$g)->paginate(15);
+            $result = Movie::orderByRaw('upper('.$s.') '.$g)->paginate(10);
         }
         else {
             $result = Movie::where('title', 'LIKE', "%{$request->w}%")
                 ->orWhere('review', 'LIKE', "%{$request->w}%")
                 ->orWhere('genre', 'LIKE', "%{$request->w}%")
                 ->orderByRaw('upper('.$s.') '.$g)
-                ->paginate(15);
+                ->paginate(10);
         }
         
+        foreach ($result as $p) {
+            $url = "https://en.wikipedia.org/w/api.php";
+            $response = Http::get($url, ["action" => "query", 
+                                                    "list" => "search",
+                                                    "srsearch" => $p->title, 
+                                                    "format" => "json"]);
+            $x = $response["query"];
+            $t = $x["search"];
+            if(!empty($t)) {
+                $u = $t[0];
+                $title = $u["title"];
+            }
+            else {
+                $title = "";
+            }
+            $p["wiki"] = $title;
+        }
+
         return $result;
     }
-
 }

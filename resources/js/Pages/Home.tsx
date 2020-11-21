@@ -3,6 +3,10 @@ import { Pagination } from "./Pagination";
 import axios, { AxiosResponse } from "axios"
 import { InertiaLink } from '@inertiajs/inertia-react'
 import { Loader } from "./Loader"
+import Alert from 'react-bootstrap/Alert'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+
 
 interface movieAPI {
     id: number,
@@ -48,7 +52,7 @@ const Home = () => {
     }
 
     const onDeleteMovie = (id: number) => {
-
+        
         setLoad(true);
 
         axios
@@ -63,8 +67,11 @@ const Home = () => {
                     return item.id !== id;
                 }));
                 setLoad(false);
-
+                setShowModal(false);
             })
+
+        setLoad(false);
+        setShowModal(false);
     }
 
     const refresh = (page?: number) => {
@@ -101,6 +108,17 @@ const Home = () => {
     const paginate = (pageNumber: number) => {
         refresh(pageNumber);
     };
+
+    const [showModal, setShowModal] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+
+    const [curID, setCurID] = useState(0);
+    
+    const handleClose = () => setShowModal(false);
+    const handleShow = (id: number) => {
+        setShowModal(true);
+        setCurID(id);
+    }
 
     const [curHeadClick, setCurHeadClick]: [number, (curHeadClick: number) => void] = useState(1);
 
@@ -169,7 +187,7 @@ const Home = () => {
                                             Review
                                         </th>
                                         <th>Wikipedia(Search using wikipedia)</th>
-                                        <th>Action</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -185,7 +203,7 @@ const Home = () => {
                                                 <div className="col-md-4">
                                                     <a
                                                         className="btn btn-outline-success my-2 my-sm-0"
-                                                        onClick={() => {onDeleteMovie(datas.id)}}
+                                                        onClick={() => { handleShow(datas.id)}}
                                                         >Delete
                                                     </a>
                                                 </div>
@@ -207,7 +225,21 @@ const Home = () => {
                             totalPerPage={totalPerPageV} 
                             total={totalV}
                             ClickHandler={paginate} />
-                    
+
+                        <Modal show={showModal} onHide={handleClose} animation={false}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Modal title</Modal.Title>
+                            </Modal.Header>
+
+                            <Modal.Body>
+                                <p>Do you really want to delete?</p>
+                            </Modal.Body>
+
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleClose} >No</Button>
+                                <Button variant="primary" onClick={() => onDeleteMovie(curID)}>Delete</Button>
+                            </Modal.Footer>
+                        </Modal>                    
                 </div>
             }
         </React.Fragment>

@@ -18,10 +18,6 @@ Route::get('/', function () {
     return Inertia::render('Home');
 });
 
-Route::get('home', function(){
-    return Inertia::render('Home');
-});
-
 Route::get('create', function(){
     return Inertia::render('Create');
 });

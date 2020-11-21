@@ -52371,46 +52371,48 @@ var map = {
 	"./Create": [
 		"./resources/js/Pages/Create.tsx",
 		0,
-		2
+		3
 	],
 	"./Create.tsx": [
 		"./resources/js/Pages/Create.tsx",
 		0,
-		2
+		3
 	],
 	"./Edit": [
 		"./resources/js/Pages/Edit.tsx",
 		0,
-		3
+		4
 	],
 	"./Edit.tsx": [
 		"./resources/js/Pages/Edit.tsx",
 		0,
-		3
+		4
 	],
 	"./Home": [
 		"./resources/js/Pages/Home.tsx",
-		1
+		1,
+		2
 	],
 	"./Home.tsx": [
 		"./resources/js/Pages/Home.tsx",
-		1
+		1,
+		2
 	],
 	"./Loader": [
 		"./resources/js/Pages/Loader.tsx",
-		4
+		5
 	],
 	"./Loader.tsx": [
 		"./resources/js/Pages/Loader.tsx",
-		4
+		5
 	],
 	"./Pagination": [
 		"./resources/js/Pages/Pagination.tsx",
-		5
+		6
 	],
 	"./Pagination.tsx": [
 		"./resources/js/Pages/Pagination.tsx",
-		5
+		6
 	]
 };
 function webpackAsyncContext(req) {
